@@ -29,7 +29,7 @@ module Admin
 
     def update
       if @category.update(parse_category_params)
-        redirect_to parent_categories_admin_categories, notice: 'Category was successfully updated.'
+        redirect_to parent_categories_admin_categories_path, notice: 'Category was successfully updated.'
       else
         flash.now[:alert] = @category.errors.full_messages.to_sentence
         render :edit
@@ -38,7 +38,7 @@ module Admin
 
     def destroy
       @category.destroy
-      redirect_to parent_categories_admin_categories, notice: 'Category was successfully destroyed.'
+      redirect_to parent_categories_admin_categories_path, notice: 'Category was successfully destroyed.'
     end
 
     def parent_categories

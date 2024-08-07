@@ -5,9 +5,9 @@
   <% elsif params['parent_category_id'] %>
     <% @category = Category.find(params['parent_category_id']) %>
   <% end %>
-  <% if @category.present? %>
-    <span><%= button_to 'New Product Test', new_admin_product_path(category_id: params['category_id']), method: :get  %></span>
-  <% end %>
+  <%# <% if @category.present? %>
+    <%# <span><%= button_to 'New Product Test', new_admin_product_path(category_id: params['category_id']), method: :get  %>
+  <%# <% end %>
   <div class='header-div'>
     <%= form_tag admin_products_path, method: :get do %>
       <%= text_field_tag :search, params[:search], placeholder: "Search for products" %>
