@@ -1,0 +1,81 @@
+<%= form_with(model: [:admin, @product], multipart: true , id: 'product-form', local: true) do |p| %>
+  <div>
+    <%= p.label :Title %>
+    <%= p.text_field :title, required: true %>
+  </div>
+  <br>
+
+  <div>
+    <%= p.label :Description %>
+    <%= p.text_area :description %>
+  </div>
+  <br>
+
+  <div>
+    <%= p.label :Category %>
+    <% if @product.category_id.nil? %>
+      <%= select_tag "product[category_id]", options_from_collection_for_select(Category.all, "id", "slug"), :required => true, include_blank: true %>
+    <% else %>
+      <%= select_tag "product[category_id]", options_from_collection_for_select(Category.all, "id", "slug", @product.category_id), :required => true, include_blank: true %>
+    <% end %>
+  </div>
+  <br>
+
+  <div>
+    <%= p.label :Color %>
+    <% if @product.new_record? %>
+      <%= p.select :color, options_for_select(@product.category.color),  { include_blank: 'please select', multiple: true}, { id: 'color-select', required: true, multiple: true }%>
+    <% else %>
+      <%= p.select :color, options_for_select(@product.category.color, @product.variants.pluck('color')),  { include_blank: 'please select', multiple: true}, { id: 'color-select', required: true, multiple: true }%>
+    <% end %>
+  </div>
+  <br>
+
+  <div>
+    <%= p.label :Size %>
+    <% if @product.new_record? %>
+      <%= p.select :size, options_for_select(@product.category.size),  { include_blank: 'please select', multiple: true }, { id: 'size-select', required: true, multiple: true }%>
+    <% else %>
+      <%= p.select :size, options_for_select(@product.category.size, @product.variants.pluck('size')),  { include_blank: 'please select', multiple: true }, { id: 'size-select', required: true, multiple: true }%>
+    <% end %>
+  </div>
+  <br>
+
+  <div>
+    <%= p.label :Price %>
+    <%= p.number_field :price, required: true %>
+  <div>
+
+  <div>
+    <%= p.label :images %>
+    <%= p.file_field :images, multiple: true, accept: 'image/*' %>
+  </div>
+  <br>
+  <%= p.hidden_field :variants, id: 'variants-field' %>
+
+  <div class="actions">
+    <%= p.submit %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("turbolinks:load", function() {
+    const form = document.getElementById('product-form');
+    form.addEventListener('submit', function(event) {
+      const colorSelect = document.getElementById('color-select');
+      const sizeSelect = document.getElementById('size-select');
+      const variantsField = document.getElementById('variants-field');
+
+      const selectedColors = Array.from(colorSelect.selectedOptions).map(option => option.value);
+      const selectedSizes = Array.from(sizeSelect.selectedOptions).map(option => option.value);
+      let variants = [];
+
+      selectedColors.forEach(color => {
+        selectedSizes.forEach(size => {
+          variants.push({color:`${color}`,size:`${size}`});
+        });
+      });
+      variantsField.value = JSON.stringify(variants);
+    });
+  });
+</script>

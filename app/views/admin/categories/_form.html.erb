@@ -1,0 +1,26 @@
+<%= form_with(model: [:admin, @category], local: true) do |c|%>
+  <div>
+    <%= c.label :slug %>
+    <%= c.text_field :slug %>
+  </div>
+  <div>
+    <%=  c.label 'size (delimitter $)'%>
+    <%= c.text_field :size %>
+  </div>
+  <div>
+    <%=  c.label 'color (delimitter $)'%>
+    <%= c.text_field :color%>
+  </div>
+  <div>
+  <% if Category.exists? %>
+    <%= c.label 'Please select Sub categories if necessary' %>
+      <% if @category.parent_id.nil? %>
+        <%= select_tag "category[parent_id]", options_from_collection_for_select(Category.all, "id", "slug"), include_blank: true %>
+      <% else %>
+        <%= select_tag "category[parent_id]", options_from_collection_for_select(Category.all, "id", "slug", @category.parent_id), include_blank: true %>
+      <% end %>
+  <% end %>
+  </div>
+  <br>
+  <%= c.submit %>
+<% end %>

@@ -1,0 +1,39 @@
+<div class=header-container>
+  <h1><%= @category.slug %></h1>
+  <%= button_to 'New Sub Category', new_admin_category_path, method: :get, params: { parent_id: @category.id } %>
+</div>
+
+<table>
+  <tr>
+    <th>Category Slug</th>
+    <th>Sub Categories</th>
+    <th> Actions </th>
+    <th>Create Product</th>
+    <th>Get Product</th>
+  </tr>
+  <tr>
+    <td><%= @category.slug%></td>
+    <td>
+      <% if @category.subcategories.present? %>
+        <% @category.subcategories.each do |subcategory| %>
+          <li><%= link_to subcategory.slug, admin_category_path(subcategory) %></li>
+        <% end %>
+      <% else %>
+        <p>No sub categories</p>
+      <% end %>
+    </td>
+    <td><%= link_to 'Edit', edit_admin_category_path(@category) %>
+      <%= link_to 'Delete', admin_category_path(@category), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </td>
+    <td>
+      <%= button_to 'Create product', new_admin_product_path, method: :get, params: { category_id: @category.id } %>
+    </td>
+    <td>
+      <% if product.subcategories.present? %>
+        <%= button_to 'Get products', admin_products_path, method: :get, params: { category_id: @category.id } %>
+      <% else %>
+        <%= button_to 'Get products', admin_products_path, method: :get, params: { parent_category_id: @category.id } %>
+      <% end %>
+    </td>
+  </tr>
+</table>

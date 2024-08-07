@@ -1,0 +1,96 @@
+<div class="header-container">
+  <h1>Products Page</h1>
+  <% if params['category_id'] %>
+    <% @category = Category.find(params['category_id']) %>
+  <% elsif params['parent_category_id'] %>
+    <% @category = Category.find(params['parent_category_id']) %>
+  <% end %>
+  <% if @category.present? %>
+    <span><%= button_to 'New Product Test', new_admin_product_path(category_id: params['category_id']), method: :get  %></span>
+  <% end %>
+  <div class='header-div'>
+    <%= form_tag admin_products_path, method: :get do %>
+      <%= text_field_tag :search, params[:search], placeholder: "Search for products" %>
+      <%= submit_tag "Search" %>
+    <% end %>
+  </div>
+  <div>
+    <%= button_to 'All Products', admin_products_path, method: :get %>
+  </div>
+  <% if @category.present? %>
+    <div class='filter'>
+      <span> Filters </span>
+      <%= form_tag admin_products_path, method: :get, class: 'filter-form', local: true do %>
+        <%= select_tag :filter_options, options_for_select(Product::FILTERS), include_blank: true, id: 'parent-filter', multiple: true %>
+        <div id="dynamic-filters"></div>
+        <% if params[:category_id].present? %>
+          <%= hidden_field_tag :category_id, params[:category_id] %>
+        <% elsif params[:parent_category_id].present? %>
+          <%= hidden_field_tag :parent_category_id, params[:parent_category_id] %>
+        <% end %>
+        <%= submit_tag "Filter", class: 'filter-submit' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<% if @products.blank? %>
+  <p>There are no products yet. Please create one.</p>
+<% else %>
+  <table>
+    <tr>
+      <th>Product Images</th>
+      <th>Product Title</th>
+      <th>Product Description</th>
+      <th>Product Price</th>
+      <th>Product Category</th>
+      <th>Product Variants</th>
+      <th>Actions</th>
+    </tr>
+    <% @products.each_with_index do |product, product_index| %>
+      <tr>
+        <td>
+          <div id="carouselExampleControls<%= product_index %>" class="carousel slide" data-interval="false">
+            <div class="carousel-inner">
+            <% if product.images.present? %>
+              <% product.images.each_with_index do |image, index| %>
+              <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+                <%= image_tag product.resize_image(image), class: "d-block w-100" %>
+              </div>
+              <% end %>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls<%= product_index %>" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls<%= product_index %>" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+            <% else %>
+              <p>No images</p>
+            <% end %>
+        </td>
+        <td><%= product.title %></td>
+        <td><%= product.description %></td>
+        <td><%= product.price %></td>
+        <td><%= link_to product.category.slug, admin_category_path(product.category) %></td>
+        <td><%= product.variants %></td>
+        <td><%= button_to 'Update product', edit_admin_product_path(product), method: :get %>
+        <%= button_to 'Delete product', admin_product_path(product), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <tr>
+      <% end %>
+  </table>
+<% end %>
+
+<script>
+  debugger
+  window.ProductData = {
+    colors: <%= @category&.color.to_json.html_safe %>,
+    sizes: <%= @category&.size.to_json.html_safe %>,
+    prices: <%= Product::PRICE.to_json.html_safe %>
+  };
+</script>
+
+<%= javascript_include_tag 'dynamic_filters' %>
+

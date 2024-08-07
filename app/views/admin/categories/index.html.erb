@@ -1,0 +1,27 @@
+<h1>Category</h1>
+<% if @categories.present? %>
+  <table>
+    <tr>
+      <th>Category Slug</th>
+      <th>Sub Categories</th>
+      <th> Actions </th>
+    </tr>
+    <% @categories.each do |category|%>
+      <tr>
+        <td><%= category.slug %></td>
+        <td>
+          <% if category.subcategories.present? %>
+            <% category.subcategories.each do |subcategory| %>
+              <li><%= subcategory.slug %></li>
+            <% end %>
+          <% else %>
+            <p>No sub categories</p>
+          <% end %>
+        </td>
+        <td><%= link_to 'Edit', edit_admin_category_path(category) %>
+        <%= link_to 'Delete', admin_category_path(category), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+<%= button_to 'New Category', new_admin_category_path, method: :get %>'
