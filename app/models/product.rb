@@ -24,7 +24,6 @@ class Product < ApplicationRecord
   end
 
   def self.by_parent_category(parent_category_id)
-    binding.pry
     category = Category.find(parent_category_id)
     descendent_ids = descendent_category_ids(category) + [category.id]
     where(category_id: descendent_ids.flatten)

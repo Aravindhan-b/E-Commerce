@@ -29,7 +29,6 @@
           <%= button_to 'Create SubCategories', new_admin_category_path, method: :get, params: { parent_id: category.id } %>
         </td>
         <td>
-          <% binding.pry %>
           <% if category.subcategories.present? %>
             <%= button_to 'Get Products', admin_products_path, method: :get, params: { parent_category_id: category.id } %>
           <% else %>

@@ -2,7 +2,6 @@ module Admin
   class ProductsController < ApplicationController
     before_action :set_product, only: [:edit, :update, :destroy]
     def index
-      binding.pry
       @products = Product.includes(:category).all
       @products = @products.by_parent_category(params[:parent_category_id]) if params[:parent_category_id].present?
       @products = @products.by_category(params[:category_id]) if params[:category_id].present?
