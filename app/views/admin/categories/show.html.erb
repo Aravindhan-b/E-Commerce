@@ -29,10 +29,10 @@
       <%= button_to 'Create product', new_admin_product_path, method: :get, params: { category_id: @category.id } %>
     </td>
     <td>
-      <% if product.subcategories.present? %>
-        <%= button_to 'Get products', admin_products_path, method: :get, params: { category_id: @category.id } %>
-      <% else %>
+      <% if @category.subcategories.present? %>
         <%= button_to 'Get products', admin_products_path, method: :get, params: { parent_category_id: @category.id } %>
+      <% else %>
+            <%= button_to 'Get Products', admin_products_path, method: :get, params: { category_id: @category.id } %>
       <% end %>
     </td>
   </tr>
