@@ -6,8 +6,6 @@ class Product < ApplicationRecord
   validates :title, :description, :variants, presence: true
   has_many_attached :images
 
-  COLORS = %w[red green blue yellow black white brown].freeze
-  SIZE = %w[s m l xl xxl xxxl].freeze
   PRICE = %w[0-1000 1001-10000 10001-20000 20001-30000 30001-100000].freeze
   FILTERS = %w[price color size].freeze
 
